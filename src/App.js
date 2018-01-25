@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from './components/Header';
 import Product from './components/Product';
+import Form from './components/Form';
 
 class App extends Component {
   constructor(props) {
@@ -36,7 +37,9 @@ class App extends Component {
       isActive: true
     }
     this.onAddProduct = this.onAddProduct.bind(this);
-    this.modifyActive = this.modifyActive.bind(this);
+    this.modifyActive1 = this.modifyActive1.bind(this);
+    this.modifyActive2 = this.modifyActive2.bind(this);
+    console.log(this.state.products)
   }
   eventClick(text) {
     alert(text);
@@ -45,9 +48,15 @@ class App extends Component {
   onAddProduct() {
     console.log(this.refs.name.value);
   }
-  modifyActive() {
-    var str=JSON.parse(JSON.stringify(this.state.products));
-
+  modifyActive1() {
+    for (let i = 0; i < this.state.products.length; i++) {
+      var str = JSON.parse(JSON.stringify(this.state.products[i]));
+      str.status = false
+      this.state.products[i] = str;
+      this.setState({
+        products: str
+      })
+    }
     // if (this.state.isActive === true) {
     //   this.setState({
     //     isActive:false
@@ -71,40 +80,52 @@ class App extends Component {
     //     this.setState({ 
     //       status : false 
     //     }) } }
-        console.log(str);
+    console.log(this.state.products)
   }
-  render() {
-    let pr = this.state.products.map((product, index) => {
-      let result = '';
-      if (product.status) {
-        result = <Product price={product.price} key={product.id} >{product.nameProduct} {product.id}</Product>
+  modifyActive2() {
+    for (let i = 0; i < this.state.products.length; i++) {
+      var str = JSON.parse(JSON.stringify(this.state.products[i]));
+      str.status = true
+      this.state.products[i] = str;
+      this.setState({
+        products: str
+      })
+    }
+    console.log(this.state.products)
+    }
+    render() {
+      // let pr = this.state.products.map((product, index) => {
+      let items = [];
+      for (let i = 0; i < this.state.products.length; i++) {
+        var item = '';
+        if (this.state.products[i].status) {
+          item = <Product price={this.state.products[i].price} key={this.state.products[i].id} >{this.state.products[i].nameProduct} {this.state.products[i].id}</Product>
+        }
+        items.push(item);
       }
-      return result;
-    });
-    return (
-      <div>
-        <Header />
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div className="form-group">
-                <label>Product Name</label>
-                <input type="text" className="form-control" placeholder="Input field" ref="name" />
+      //   return result;
+      // });
+      return (
+        <div>
+          <Header />
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <Form/>
               </div>
-              <button type="submit" className="btn btn-primary" onClick={this.onAddProduct}>Insert Data</button>
             </div>
-          </div>
-          <br />
-          <div className="row">
-            <div className="col-xs-6 col-sm-12 col-md-6 col-lg-6">
-              {pr}
+            <br />
+            <div className="row">
+              <div className="col-xs-6 col-sm-12 col-md-6 col-lg-6">
+                {items}
+              </div>
             </div>
+            <button type="button" className="btn btn-warning" onClick={this.modifyActive1}>Ẩn</button>
+            <button type="button" className="btn btn-warning" onClick={this.modifyActive2}>Hiện</button>
           </div>
-          <button type="button" className="btn btn-warning" onClick={this.modifyActive}>Click Me : {this.state.isActive === true ? 'true' : 'false'}</button>
         </div>
-      </div>
-    );
+      );
+    }
   }
-}
 
-export default App;
+  export default App;
